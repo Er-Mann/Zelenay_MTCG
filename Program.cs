@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net;
-using MonsterCardGame.Server;
+using Zelenay_MTCG.Server;
 using Zelenay_MTCG.Repository_DB;
 //Mein Projekt
-namespace MonsterCardGame
+namespace Zelenay_MTCG
 {
     class Program
     {

@@ -1,4 +1,4 @@
-namespace MonsterCardGame.Server.HttpModel
+namespace Zelenay_MTCG.Server.HttpModel
 {
 
     public class Request

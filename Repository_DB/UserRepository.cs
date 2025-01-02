@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 using System.Data;
-using MonsterCardGame.Models.User;
+using Zelenay_MTCG.Models.Usermodel;
 
 namespace Zelenay_MTCG.Repository_DB
 {

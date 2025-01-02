@@ -1,11 +1,11 @@
 using System.Text.Json;
-using MonsterCardGame.Server.HttpHandler;
-using MonsterCardGame.Server.HttpModel;
-using MonsterCardGame.Models.User;
-using MonsterCardGame.Server.HttpLogic;
+using Zelenay_MTCG.Server.HttpHandler;
+using Zelenay_MTCG.Server.HttpModel;
+using Zelenay_MTCG.Models.Usermodel;
+using Zelenay_MTCG.Server.HttpLogic;
 using Zelenay_MTCG.Repository_DB;
 using Zelenay_MTCG.Server.Endpoints;
-namespace MonsterCardGame.Server.Endpoints
+namespace Zelenay_MTCG.Server.Endpoints.Userendpoint
 {
     public class UserEndpoint : IEndpoint
     {

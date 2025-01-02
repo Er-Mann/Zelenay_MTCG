@@ -1,9 +1,9 @@
 using System;
 using System.IO;
-using MonsterCardGame.Server.HttpModel;
-using MonsterCardGame.Server.HttpHandler;
+using Zelenay_MTCG.Server.HttpModel;
+using Zelenay_MTCG.Server.HttpHandler;
 
-namespace MonsterCardGame.Server.HttpLogic
+namespace Zelenay_MTCG.Server.HttpLogic
 {
     public class HttpResponse
     {

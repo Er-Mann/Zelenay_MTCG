@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MonsterCardGame.Models.Cards;
-namespace MonsterCardGame.Models.User
+using Zelenay_MTCG.Models.Cards;
+namespace Zelenay_MTCG.Models.Usermodel
 {
     
     public class User

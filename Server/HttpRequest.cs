@@ -2,9 +2,9 @@ using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
-using MonsterCardGame.Server.HttpModel;
+using Zelenay_MTCG.Server.HttpModel;
 
-namespace MonsterCardGame.Server.HttpLogic
+namespace Zelenay_MTCG.Server.HttpLogic
 {
 
     public class HttpRequest

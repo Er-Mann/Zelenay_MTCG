@@ -1,9 +1,9 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
-using MonsterCardGame.Server.HttpHandler;
+using Zelenay_MTCG.Server.HttpHandler;
 
-namespace MonsterCardGame.Server
+namespace Zelenay_MTCG.Server
 {
     public class TcpServer
     {

@@ -1,33 +1,34 @@
+using System.Xml.Linq;
 
-
-namespace MonsterCardGame.Models.Cards;
+namespace Zelenay_MTCG.Models.Cards;
 
 public class Card
 {
-    public Card(ElementType elementType, CardName cardName, int baseDamage, int cardRarity)
+    public Card(string cardId, enumElementType elementType, enumName cardName, int baseDamage)
     {
+        Id = cardId;
         ElementType = elementType;
-        CardName = cardName;
-        BaseDamage = baseDamage;
-        CardRarity = cardRarity;
+        Name = cardName;
+        Damage = baseDamage;
+    
     }
     
-    public ElementType ElementType { get; protected set; }
+    public enumElementType ElementType { get; set; }
 
-    public CardName CardName { get; protected set; }
-    
-    public int BaseDamage { get; protected set; }
-    
-    public int CardRarity { get; protected set; }
-    
+    public enumName Name { get; set; }
+
+    public int Damage { get; set; }
+    public string Id { get; set; }
+
+
 }
-public enum ElementType
+public enum enumElementType
 {
     Fire,
     Water,
     Normal
 }
-public enum CardName
+public enum enumName
 {
     Dragon,
     Elf,

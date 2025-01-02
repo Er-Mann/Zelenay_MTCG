@@ -1,4 +1,4 @@
-namespace MonsterCardGame.Server.HttpHandler;
+namespace Zelenay_MTCG.Server.HttpHandler;
 
 internal class StreamTracer
 {

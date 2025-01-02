@@ -1,4 +1,4 @@
-﻿using MonsterCardGame.Server.HttpModel;
+﻿using Zelenay_MTCG.Server.HttpModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
