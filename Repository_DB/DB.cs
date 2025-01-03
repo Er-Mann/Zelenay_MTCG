@@ -12,10 +12,10 @@ namespace Zelenay_MTCG.Repository_DB
     {
         private readonly string _dbConnString;
 
-        public DBconn(string dbConnString)
+        public DBconn()
         {
-            _dbConnString = dbConnString ??
-                throw new ArgumentNullException(nameof(dbConnString));
+            _dbConnString = "Host=localhost;Database=mydb;Username=user;Password=password";
+           
         }
 
         public IDbConnection CreateConnection()
@@ -50,11 +50,9 @@ namespace Zelenay_MTCG.Repository_DB
             authtoken      TEXT
         );
 
-        -- 3) PACKAGES table (new)
+        -- 3) PACKAGES table
         CREATE TABLE IF NOT EXISTS mydb.public.packages (
-            packageid   SERIAL PRIMARY KEY,
-            created_at  TIMESTAMP NOT NULL DEFAULT NOW()
-            -- You can add more columns if needed, e.g. 'is_sold', etc.
+            packageid   SERIAL PRIMARY KEY
         );
 
         -- 4) CARDS table
@@ -109,7 +107,7 @@ namespace Zelenay_MTCG.Repository_DB
     ";
 
             command.ExecuteNonQuery();
-            connection.Close();
+            //connection.Close();
         }
 
 

@@ -9,8 +9,7 @@ namespace Zelenay_MTCG
     {
         static void Main(string[] args)
         {
-            var dbConnString = "Host=localhost;Database=mydb;Username=user;Password=password";
-            DBconn DBcs = new DBconn(dbConnString);
+            DBconn DBcs = new DBconn();
             DBcs.CreateTables();
 
             var tcpServer = new TcpServer(IPAddress.Loopback, 10001);

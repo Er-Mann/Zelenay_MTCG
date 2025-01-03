@@ -6,14 +6,12 @@ namespace Zelenay_MTCG.Repository_DB
 {
     public class UserRepository
     {
-        private readonly string dbConnString;
         private readonly DBconn DBcs;
 
         // Konstruktor
         public UserRepository()
         {
-            dbConnString = "Host=localhost;Database=mydb;Username=user;Password=password";
-            DBcs = new DBconn(dbConnString);
+            DBcs = new DBconn();
         }
 
         public void AddUser(User user)

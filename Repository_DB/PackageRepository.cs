@@ -11,67 +11,79 @@ using Zelenay_MTCG.Models.Package;
 
 namespace Zelenay_MTCG.Repository_DB
 {
-    public class PackageRepository
-    {
-        private readonly string dbConnString;
-        private readonly DBconn DBcs;
+        public class PackageRepository
+        {
+            private readonly DBconn _dbConn;
 
         public PackageRepository()
         {
-            dbConnString = "Host=localhost;Database=mydb;Username=user;Password=password";
-            DBcs = new DBconn(dbConnString);
+            _dbConn = new DBconn();   
         }
 
-        public void CreatePackage(List<Card> cards)
-        {
-            using IDbConnection connection = DBcs.CreateConnection();
-            connection.Open();
+        // private readonly CardRepository _cardRepository;
 
-            using var transaction = connection.BeginTransaction();
+      
 
-            try
+            public void CreatePackage(List<Card> cards)
             {
-                // 1) Create a new package row
-                int newPackageId;
-                using (var cmd = connection.CreateCommand())
+                using IDbConnection connection = _dbConn.CreateConnection();
+                connection.Open();
+                using var transaction = connection.BeginTransaction();
+
+                try
                 {
-                    cmd.Transaction = transaction;
-                    cmd.CommandText = @"
-                        INSERT INTO packages (created_at)
-                        VALUES (NOW())
+                    // 1) Insert a row in packages
+                    int newPackageId;
+                    using (var cmd = connection.CreateCommand())
+                    {
+                        cmd.Transaction = transaction;
+                        cmd.CommandText = @"
+                        INSERT INTO mydb.public.packages
+                        DEFAULT VALUES
                         RETURNING packageid;
                     ";
 
-                    newPackageId = Convert.ToInt32(cmd.ExecuteScalar());
-                }
+                        newPackageId = Convert.ToInt32(cmd.ExecuteScalar());
+                    }
 
-                // 2) Insert each card referencing 'newPackageId'
-                foreach (var card in cards)
-                {
-                    using var cardCmd = connection.CreateCommand();
-                    cardCmd.Transaction = transaction;
-                    cardCmd.CommandText = @"
-                        INSERT INTO cards (cardid, name, damage, packageid)
-                        VALUES (@cardid, @name, @damage, @packageid);
+                    // 2) Insert each card referencing newPackageId
+                    foreach (var card in cards)
+                    {
+                        
+                        // We can reuse the same connection if we want, just need the same transaction:
+                        using var cmd2 = connection.CreateCommand();
+                        cmd2.Transaction = transaction;
+
+                        cmd2.CommandText = @"
+                        INSERT INTO mydb.public.cards
+                            (name, damage, element_type, card_type, package_id)
+                        VALUES
+                            (@name, @damage, @element_type, @card_type, @package_id)
+                        RETURNING cardid;
                     ";
 
-                    AddParameter(cardCmd, "@cardid", DbType.String, card.Id.ToString());
-                    AddParameter(cardCmd, "@name", DbType.String, card.Name);
-                    AddParameter(cardCmd, "@damage", DbType.Decimal, card.Damage);
-                    AddParameter(cardCmd, "@packageid", DbType.Int32, newPackageId);
-                    cardCmd.ExecuteNonQuery();
+                        AddParameter(cmd2, "@name", DbType.String, card.Name);
+                        AddParameter(cmd2, "@damage", DbType.Decimal, card.Damage);
+                        AddParameter(cmd2, "@element_type", DbType.Int32, (int)card.ElementType);   //This is Npgsql telling you
+                                                                                                    //“I see you’re trying to pass an enum to a parameter that’s declared as an integer type.I can’t do that conversion automatically.You must give me an int, not an enum.” Lösung: (int)
+                        AddParameter(cmd2, "@card_type", DbType.Int32, (int)card.CardType);
+                        AddParameter(cmd2, "@package_id", DbType.Int32, newPackageId);
+
+                    card.Id = cmd2.ExecuteScalar().ToString();
+
+
                 }
 
                 transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
             }
-            catch
-            {
-                transaction.Rollback();
-                throw;
-            }
-        }
 
-        private void AddParameter(IDbCommand command, string name, DbType type, object value)
+            private void AddParameter(IDbCommand command, string name, DbType type, object value)
         {
             var param = command.CreateParameter();
             param.ParameterName = name;
