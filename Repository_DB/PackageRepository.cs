@@ -25,7 +25,9 @@ namespace Zelenay_MTCG.Repository_DB
       
 
             public void CreatePackage(List<Card> cards)
-            {
+        {
+            
+
                 using IDbConnection connection = _dbConn.CreateConnection();
                 connection.Open();
                 using var transaction = connection.BeginTransaction();
@@ -56,23 +58,22 @@ namespace Zelenay_MTCG.Repository_DB
 
                         cmd2.CommandText = @"
                         INSERT INTO mydb.public.cards
-                            (name, damage, element_type, card_type, package_id)
+                            (cardid, name, damage, element_type, card_type, package_id)
                         VALUES
-                            (@name, @damage, @element_type, @card_type, @package_id)
+                            (@cardid, @name, @damage, @element_type, @card_type, @package_id)
                         RETURNING cardid;
-                    ";
+    ";
 
+                        AddParameter(cmd2, "@cardid", DbType.String, card.Id ?? (object)DBNull.Value);
                         AddParameter(cmd2, "@name", DbType.String, card.Name);
                         AddParameter(cmd2, "@damage", DbType.Decimal, card.Damage);
-                        AddParameter(cmd2, "@element_type", DbType.Int32, (int)card.ElementType);   //This is Npgsql telling you
-                                                                                                    //“I see you’re trying to pass an enum to a parameter that’s declared as an integer type.I can’t do that conversion automatically.You must give me an int, not an enum.” Lösung: (int)
+                        AddParameter(cmd2, "@element_type", DbType.Int32, (int)card.ElementType);
                         AddParameter(cmd2, "@card_type", DbType.Int32, (int)card.CardType);
                         AddParameter(cmd2, "@package_id", DbType.Int32, newPackageId);
 
-                    card.Id = cmd2.ExecuteScalar().ToString();
-
-
-                }
+                        // The database will return the same ID you just inserted:
+                        card.Id = cmd2.ExecuteScalar().ToString();
+                     }
 
                 transaction.Commit();
                 }

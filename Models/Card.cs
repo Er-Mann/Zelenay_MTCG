@@ -20,7 +20,7 @@ namespace Zelenay_MTCG.Models.Cards
     public class Card
     {
         // Primary key in DB if you need it
-        public int CardId { get; set; }
+
 
         // The UUID from the JSON: "Id"
         public string Id { get; set; }

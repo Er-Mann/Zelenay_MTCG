@@ -2,8 +2,11 @@ using System;
 using System.IO;
 using System.Net.Sockets;
 using Zelenay_MTCG.Server.Endpoints.Userendpoint;
-
+using Zelenay_MTCG.Server.Endpoints.TradeEndpoint;
 using Zelenay_MTCG.Server.Endpoints.Packageendpoint;
+
+using Zelenay_MTCG.Server.Endpoints.CardEndpoint;
+using Zelenay_MTCG.Server.Endpoints.DeckEndpoint;
 using Zelenay_MTCG.Server.HttpModel;
 using Zelenay_MTCG.Server.HttpLogic;
 using Zelenay_MTCG.Repository_DB;
@@ -14,15 +17,24 @@ namespace Zelenay_MTCG.Server.HttpHandler
     {
         private readonly HttpRequest _requestHandler;
         private readonly HttpResponse _responseHandler;
+
         private readonly UserRepository _userRepository;
         private readonly PackageRepository _packageRepository;
+        private readonly TradeRepository _TradeRepository;
+        private readonly CardRepository _cardRepository;
+        private readonly DeckRepository _deckRepository;
+
 
         public HttpProcessor()
         {
             _requestHandler = new HttpRequest();
             _responseHandler = new HttpResponse();
+
             _userRepository = new UserRepository();
             _packageRepository = new PackageRepository();
+            _TradeRepository = new TradeRepository(_userRepository);
+            _cardRepository = new CardRepository();
+            _deckRepository = new DeckRepository();
         }
 
         public void ProcessRequest(TcpClient clientSocket)
@@ -43,6 +55,21 @@ namespace Zelenay_MTCG.Server.HttpHandler
             {
                 var userEndpoint = new PackageEndpoint(_packageRepository);
                 userEndpoint.HandleRequest(request, response);
+            }
+            else if (request.Path == "/transactions/packages")
+            {
+                var userEndpoint = new TradeEndpoint(_TradeRepository, _userRepository);
+                userEndpoint.HandleRequest(request, response);
+            }
+            else if (request.Path == "/cards")
+            {
+                var cardEndpoint = new CardEndpoint(_cardRepository, _userRepository);
+                cardEndpoint.HandleRequest(request, response);
+            }
+            else if (request.Path == "/deck")
+            {
+                var deckEndpoint = new DeckEndpoint(_deckRepository, _userRepository);
+                deckEndpoint.HandleRequest(request, response);
             }
             else
             {

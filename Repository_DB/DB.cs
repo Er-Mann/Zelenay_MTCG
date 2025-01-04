@@ -55,27 +55,28 @@ namespace Zelenay_MTCG.Repository_DB
             packageid   SERIAL PRIMARY KEY
         );
 
-        -- 4) CARDS table
+       
         CREATE TABLE IF NOT EXISTS mydb.public.cards (
-            cardid        SERIAL PRIMARY KEY,
-            name          TEXT    NOT NULL,
-            element_type  INT     NOT NULL,
-            damage        DECIMAL NOT NULL,
-            card_type     INT     NOT NULL,
-            package_id    INT,            -- references the new 'packages' table
-            userid        INT,            -- references 'users'
+            cardid       TEXT PRIMARY KEY,
+            name         TEXT    NOT NULL,
+            element_type INT     NOT NULL,
+            damage       DECIMAL NOT NULL,
+            card_type    INT     NOT NULL,
+            package_id   INT,
+            userid       INT,
             FOREIGN KEY (package_id) REFERENCES mydb.public.packages (packageid),
-            FOREIGN KEY (userid)    REFERENCES mydb.public.users    (userid)
-        );
+            FOREIGN KEY (userid)    REFERENCES mydb.public.users (userid)
+);
+
 
         -- 5) DECKS table
         CREATE TABLE IF NOT EXISTS mydb.public.decks (
             deckid     SERIAL PRIMARY KEY,
             userid     INT NOT NULL,
-            card_1_id  INT NOT NULL,
-            card_2_id  INT NOT NULL,
-            card_3_id  INT NOT NULL,
-            card_4_id  INT NOT NULL,
+            card_1_id  TEXT NOT NULL,
+            card_2_id  TEXT NOT NULL,
+            card_3_id  TEXT NOT NULL,
+            card_4_id  TEXT NOT NULL,
             FOREIGN KEY (userid)    REFERENCES mydb.public.users (userid),
             FOREIGN KEY (card_1_id) REFERENCES mydb.public.cards (cardid),
             FOREIGN KEY (card_2_id) REFERENCES mydb.public.cards (cardid),
@@ -87,7 +88,7 @@ namespace Zelenay_MTCG.Repository_DB
         CREATE TABLE IF NOT EXISTS mydb.public.trades (
             tradeid        SERIAL PRIMARY KEY,
             userid         INT     NOT NULL,
-            cardid         INT     NOT NULL,
+            cardid         TEXT     NOT NULL,
             card_type      INT     NOT NULL,
             minimum_damage DECIMAL NOT NULL,
             FOREIGN KEY (userid) REFERENCES mydb.public.users (userid),
