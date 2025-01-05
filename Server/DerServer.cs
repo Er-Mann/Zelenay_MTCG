@@ -25,7 +25,10 @@ namespace Zelenay_MTCG.Server
             while (true)
             {
                 var clientSocket = _httpServer.AcceptTcpClient();
-                _httpProcessor.ProcessRequest(clientSocket);
+
+                var clientThread = new Thread(() => _httpProcessor.ProcessRequest(clientSocket)); //lambda expression
+                clientThread.Start();
+         
             }
         }
     }
