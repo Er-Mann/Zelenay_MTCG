@@ -66,10 +66,20 @@ namespace Zelenay_MTCG.Server.HttpHandler
                 var cardEndpoint = new CardEndpoint(_cardRepository, _userRepository);
                 cardEndpoint.HandleRequest(request, response);
             }
-            else if (request.Path == "/deck")
+            else if (request.Path == "/deck" || request.Path == "/deck?format=plain")
             {
                 var deckEndpoint = new DeckEndpoint(_deckRepository, _userRepository);
                 deckEndpoint.HandleRequest(request, response);
+            }
+            else if (request.Path.StartsWith("/users/") && request.Method == "GET")
+            {  
+                var userEndpoint = new UserEndpoint(_userRepository);
+                userEndpoint.HandleGetUser(request, response);            //besser mit handlerequest machen
+            }
+            else if (request.Path.StartsWith("/users/") && request.Method == "PUT")
+            {
+                var userEndpoint = new UserEndpoint(_userRepository);
+                userEndpoint.HandleUpdateUser(request, response);
             }
             else
             {

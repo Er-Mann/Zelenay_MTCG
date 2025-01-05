@@ -19,6 +19,9 @@ namespace Zelenay_MTCG.Models.Usermodel
         public int Losses { get; set; }
         public string AuthToken { get; set; }
         public int UserId { get; set; }
+        public string Name { get; set; }
+        public string Bio { get; set; }
+        public string Image { get; set; }
         public User()
         {
 

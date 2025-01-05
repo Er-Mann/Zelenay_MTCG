@@ -47,7 +47,10 @@ namespace Zelenay_MTCG.Repository_DB
             gold           INT     NOT NULL DEFAULT 20,
             wins           INT     NOT NULL DEFAULT 0,
             losses         INT     NOT NULL DEFAULT 0,
-            authtoken      TEXT
+            authtoken      TEXT,
+            name           TEXT,
+            bio            TEXT,
+            image          TEXT
         );
 
         -- 3) PACKAGES table
@@ -83,6 +86,8 @@ namespace Zelenay_MTCG.Repository_DB
             FOREIGN KEY (card_3_id) REFERENCES mydb.public.cards (cardid),
             FOREIGN KEY (card_4_id) REFERENCES mydb.public.cards (cardid)
         );
+ALTER TABLE decks ADD CONSTRAINT unique_userid UNIQUE (userid);
+
 
         -- 6) TRADES table
         CREATE TABLE IF NOT EXISTS mydb.public.trades (

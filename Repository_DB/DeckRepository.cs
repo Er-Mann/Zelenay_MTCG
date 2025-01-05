@@ -20,49 +20,89 @@ namespace Zelenay_MTCG.Repository_DB
             using IDbConnection connection = _dbConn.CreateConnection();
             connection.Open();
 
-            // 1) Load the deck row for this user
             using var cmd = connection.CreateCommand();
             cmd.CommandText = @"
-                SELECT deckid, card_1_id, card_2_id, card_3_id, card_4_id
-                FROM decks
-                WHERE userid = @userid
-                LIMIT 1
-            ";
+        SELECT card_1_id, card_2_id, card_3_id, card_4_id
+        FROM decks
+        WHERE userid = @userid
+        LIMIT 1
+    ";
             AddParameter(cmd, "@userid", DbType.Int32, userId);
 
             using var reader = cmd.ExecuteReader();
             if (!reader.Read())
             {
-                // no row => no deck => return empty list
-                return deckCards;
+                return deckCards; // No deck found, return empty list
             }
 
-            // If we found a row, gather the card IDs
-            string? card1Id = reader.IsDBNull(1) ? null : reader.GetString(1);
-            string? card2Id = reader.IsDBNull(2) ? null : reader.GetString(2);
-            string? card3Id = reader.IsDBNull(3) ? null : reader.GetString(3);
-            string? card4Id = reader.IsDBNull(4) ? null : reader.GetString(4);
+            var cardIds = new List<string?>()
+    {
+        reader.IsDBNull(0) ? null : reader.GetString(0),
+        reader.IsDBNull(1) ? null : reader.GetString(1),
+        reader.IsDBNull(2) ? null : reader.GetString(2),
+        reader.IsDBNull(3) ? null : reader.GetString(3)
+    };
 
-            reader.Close(); // done with deck query
+            reader.Close(); // Ensure the reader is closed before executing new commands
 
-            // 2) For each cardId that is not null, load the card from 'cards' table
-            var allCardIds = new[] { card1Id, card2Id, card3Id, card4Id }
-                .Where(id => id != null)
-                .ToList();
-
-            foreach (var cardId in allCardIds)
+            foreach (var cardId in cardIds.Where(id => id != null))
             {
-                Card? card = LoadCardById(connection, cardId!);
+                var card = LoadCardById(connection, cardId!);
                 if (card != null)
+                {
                     deckCards.Add(card);
+                }
             }
 
             return deckCards;
         }
 
+
+        public bool ConfigureDeck(int userId, List<string> cardIds)
+        {
+            if (cardIds.Count != 4)
+            {
+                return false; // Must have exactly 4 cards
+            }
+
+            using IDbConnection connection = _dbConn.CreateConnection();
+            connection.Open();
+            using var transaction = connection.BeginTransaction();
+
+            try
+            {
+                using var cmd = connection.CreateCommand();
+                cmd.Transaction = transaction;
+                cmd.CommandText = @"
+                    INSERT INTO decks (userid, card_1_id, card_2_id, card_3_id, card_4_id)
+                    VALUES (@userid, @card1, @card2, @card3, @card4)
+                    ON CONFLICT (userid)
+                    DO UPDATE SET
+                        card_1_id = EXCLUDED.card_1_id,
+                        card_2_id = EXCLUDED.card_2_id,
+                        card_3_id = EXCLUDED.card_3_id,
+                        card_4_id = EXCLUDED.card_4_id
+                ";
+
+                AddParameter(cmd, "@userid", DbType.Int32, userId);
+                AddParameter(cmd, "@card1", DbType.String, cardIds[0]);
+                AddParameter(cmd, "@card2", DbType.String, cardIds[1]);
+                AddParameter(cmd, "@card3", DbType.String, cardIds[2]);
+                AddParameter(cmd, "@card4", DbType.String, cardIds[3]);
+
+                cmd.ExecuteNonQuery();
+                transaction.Commit();
+                return true;
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
+        }
+
         private Card? LoadCardById(IDbConnection connection, string cardId)
         {
-            // minimal inline approach
             using var cmd = connection.CreateCommand();
             cmd.CommandText = @"
                 SELECT cardid, name, damage, element_type, card_type
@@ -74,7 +114,7 @@ namespace Zelenay_MTCG.Repository_DB
             using var reader = cmd.ExecuteReader();
             if (!reader.Read()) return null;
 
-            var card = new Card
+            return new Card
             {
                 Id = reader.GetString(0),
                 Name = reader.GetString(1),
@@ -82,7 +122,6 @@ namespace Zelenay_MTCG.Repository_DB
                 ElementType = (enumElementType)reader.GetInt32(3),
                 CardType = (enumCardType)reader.GetInt32(4)
             };
-            return card;
         }
 
         private void AddParameter(IDbCommand command, string name, DbType type, object value)

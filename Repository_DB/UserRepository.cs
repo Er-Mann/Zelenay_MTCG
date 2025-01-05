@@ -71,15 +71,15 @@ namespace Zelenay_MTCG.Repository_DB
             using IDbConnection connection = DBcs.CreateConnection();
             connection.Open();
 
-            using IDbCommand command = connection.CreateCommand();
-            command.CommandText = @"
-                SELECT userid, username, password, elo, gold, wins, losses, authtoken 
-                FROM mydb.public.users 
-                WHERE username = @username";
+            using var cmd = connection.CreateCommand();
+            cmd.CommandText = @"
+        SELECT userid, username, password, name, bio, image, elo, wins, losses
+        FROM users
+        WHERE username = @username
+    ";
+            AddParameterWithValue(cmd, "@username", DbType.String, username);
 
-            AddParameterWithValue(command, "@username", DbType.String, username);
-
-            using IDataReader reader = command.ExecuteReader();
+            using var reader = cmd.ExecuteReader();
             if (reader.Read())
             {
                 return new User
@@ -87,15 +87,18 @@ namespace Zelenay_MTCG.Repository_DB
                     UserId = reader.GetInt32(0),
                     Username = reader.GetString(1),
                     Password = reader.GetString(2),
-                    Elo = reader.GetInt32(3),
-                    Gold = reader.GetInt32(4),
-                    Wins = reader.GetInt32(5),
-                    Losses = reader.GetInt32(6),
-                    AuthToken = reader.IsDBNull(7) ? "" : reader.GetString(7)
+                    Name = reader.IsDBNull(3) ? null : reader.GetString(3),
+                    Bio = reader.IsDBNull(4) ? null : reader.GetString(4),
+                    Image = reader.IsDBNull(5) ? null : reader.GetString(5),
+                    Elo = reader.GetInt32(6),
+                    Wins = reader.GetInt32(7),
+                    Losses = reader.GetInt32(8)
                 };
             }
+
             return null;
         }
+
 
         public User? GetUserByAuthToken(string authToken)
         {
@@ -124,13 +127,44 @@ namespace Zelenay_MTCG.Repository_DB
             return null;
         }
 
-        public void UpdateUser(User? user)
-        {
-            if (user == null || user.UserId == 0)
-            {
-                throw new InvalidDataException("User not found");
-            }
 
+
+
+        public User? GetUserProfile(string username)
+        {
+            using IDbConnection connection = DBcs.CreateConnection();
+            connection.Open();
+
+            using IDbCommand command = connection.CreateCommand();
+            command.CommandText = @"
+                SELECT userid, username, name, bio, image, elo, gold, wins, losses, authtoken
+                FROM mydb.public.users
+                WHERE username = @username";
+
+            AddParameterWithValue(command, "@username", DbType.String, username);
+
+            using IDataReader reader = command.ExecuteReader();
+            if (reader.Read())
+            {
+                return new User
+                {
+                    UserId = reader.GetInt32(0),
+                    Username = reader.GetString(1),
+                    Name = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                    Bio = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                    Image = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                    Elo = reader.GetInt32(5),
+                    Gold = reader.GetInt32(6),
+                    Wins = reader.GetInt32(7),
+                    Losses = reader.GetInt32(8),
+                    AuthToken = reader.IsDBNull(9) ? "" : reader.GetString(9)
+                };
+            }
+            return null;
+        }
+
+        public void UpdateUserProfile(int userId, string name, string bio, string image)
+        {
             using IDbConnection connection = DBcs.CreateConnection();
             connection.Open();
             using var transaction = connection.BeginTransaction();
@@ -140,13 +174,17 @@ namespace Zelenay_MTCG.Repository_DB
                 using IDbCommand command = connection.CreateCommand();
                 command.Transaction = transaction;
 
-                command.CommandText = @"UPDATE mydb.public.users SET elo = @elo, gold = @gold, wins = @wins, losses = @losses, ""authtoken"" = @authtoken WHERE ""userid"" = @userid";
-                AddParameterWithValue(command, "@elo", DbType.Int32, user.Elo);
-                AddParameterWithValue(command, "@gold", DbType.Int32, user.Gold);
-                AddParameterWithValue(command, "@wins", DbType.Int32, user.Wins);
-                AddParameterWithValue(command, "@losses", DbType.Int32, user.Losses);
-                AddParameterWithValue(command, "@authtoken", DbType.String, user.AuthToken);
-                AddParameterWithValue(command, "@userid", DbType.Int32, user.UserId);
+                command.CommandText = @"
+            UPDATE mydb.public.users
+            SET name = @name, bio = @bio, image = @image
+            WHERE userid = @userid
+        ";
+
+                AddParameterWithValue(command, "@name", DbType.String, name);
+                AddParameterWithValue(command, "@bio", DbType.String, bio);
+                AddParameterWithValue(command, "@image", DbType.String, image);
+                AddParameterWithValue(command, "@userid", DbType.Int32, userId);
+
                 command.ExecuteNonQuery();
                 transaction.Commit();
             }
@@ -155,31 +193,6 @@ namespace Zelenay_MTCG.Repository_DB
                 transaction.Rollback();
                 throw;
             }
-        }
-
-        public void UpdateUserWithConnection(User user, IDbConnection connection, IDbTransaction transaction)
-        {
-            if (user == null || user.UserId == 0)
-            {
-                throw new InvalidDataException("User not found");
-            }
-
-            using IDbCommand command = connection.CreateCommand();
-            command.Transaction = transaction;
-
-            command.CommandText = @"
-            UPDATE mydb.public.users 
-            SET elo = @elo, gold = @gold, wins = @wins, losses = @losses, ""authtoken"" = @authtoken 
-            WHERE ""userid"" = @userid";
-
-            AddParameterWithValue(command, "@elo", DbType.Int32, user.Elo);
-            AddParameterWithValue(command, "@gold", DbType.Int32, user.Gold);
-            AddParameterWithValue(command, "@wins", DbType.Int32, user.Wins);
-            AddParameterWithValue(command, "@losses", DbType.Int32, user.Losses);
-            AddParameterWithValue(command, "@authtoken", DbType.String, user.AuthToken);
-            AddParameterWithValue(command, "@userid", DbType.Int32, user.UserId);
-
-            command.ExecuteNonQuery();
         }
 
 

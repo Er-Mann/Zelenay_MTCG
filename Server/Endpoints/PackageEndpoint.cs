@@ -46,7 +46,7 @@ public class PackageEndpoint : IEndpoint
                 response.StatusCode = 400;
                 response.ReasonPhrase = "Bad Request";
                 response.Body = "No cards provided.";
-                return;
+                return; 
             }
 
             // Let the repo create the package
