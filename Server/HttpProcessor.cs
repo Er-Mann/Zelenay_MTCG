@@ -10,6 +10,7 @@ using Zelenay_MTCG.Server.Endpoints.DeckEndpoint;
 using Zelenay_MTCG.Server.HttpModel;
 using Zelenay_MTCG.Server.HttpLogic;
 using Zelenay_MTCG.Repository_DB;
+using Zelenay_MTCG.Server.Endpoints.BattleEndpoint;
 
 namespace Zelenay_MTCG.Server.HttpHandler
 {
@@ -72,7 +73,7 @@ namespace Zelenay_MTCG.Server.HttpHandler
                 deckEndpoint.HandleRequest(request, response);
             }
             else if (request.Path.StartsWith("/users/") && request.Method == "GET")
-            {  
+            {
                 var userEndpoint = new UserEndpoint(_userRepository);
                 userEndpoint.HandleGetUser(request, response);            //besser mit handlerequest machen
             }
@@ -81,6 +82,12 @@ namespace Zelenay_MTCG.Server.HttpHandler
                 var userEndpoint = new UserEndpoint(_userRepository);
                 userEndpoint.HandleUpdateUser(request, response);
             }
+            else if (request.Path == "/battles" && request.Method == "POST")
+            {
+                var battleEndpoint = new BattleEndpoint(_userRepository, _deckRepository);
+                battleEndpoint.HandleRequest(request, response);
+            }
+
             else
             {
                 response.StatusCode = 404;

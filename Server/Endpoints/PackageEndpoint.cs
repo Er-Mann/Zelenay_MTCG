@@ -48,7 +48,12 @@ public class PackageEndpoint : IEndpoint
                 response.Body = "No cards provided.";
                 return; 
             }
-
+            if (_packageRepository.CheckUniqueCardIds(cards)) {
+                response.StatusCode = 407;
+                response.ReasonPhrase = "Bad Request";
+                response.Body = "Cardid already exists.";
+                return;
+            }
             // Let the repo create the package
             _packageRepository.CreatePackage(cards);
 
