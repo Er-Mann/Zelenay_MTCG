@@ -32,13 +32,13 @@ namespace Zelenay_MTCG.Server.Endpoints.DeckEndpoint
                 else
                 {
                     response.StatusCode = 405; // Method Not Allowed
-                    response.ReasonPhrase = "Method Not Allowed";
+                    response.Reason = "Method Not Allowed";
                 }
             }
             else
             {
                 response.StatusCode = 404;
-                response.ReasonPhrase = "Not Found";
+                response.Reason = "Not Found";
             }
         }
 
@@ -47,7 +47,7 @@ namespace Zelenay_MTCG.Server.Endpoints.DeckEndpoint
             if (!request.Headers.TryGetValue("Authorization", out string authHeader))
             {
                 response.StatusCode = 401;
-                response.ReasonPhrase = "Unauthorized";
+                response.Reason = "Unauthorized";
                 return;
             }
 
@@ -56,7 +56,7 @@ namespace Zelenay_MTCG.Server.Endpoints.DeckEndpoint
             if (user == null)
             {
                 response.StatusCode = 401;
-                response.ReasonPhrase = "Unauthorized";
+                response.Reason = "Unauthorized";
                 return;
             }
 
@@ -77,7 +77,7 @@ namespace Zelenay_MTCG.Server.Endpoints.DeckEndpoint
             }
 
             response.StatusCode = 200;
-            response.ReasonPhrase = "OK";
+            response.Reason = "OK";
         }
 
         private void HandleConfigureDeck(Request request, Response response)
@@ -85,7 +85,7 @@ namespace Zelenay_MTCG.Server.Endpoints.DeckEndpoint
             if (!request.Headers.TryGetValue("Authorization", out string authHeader))
             {
                 response.StatusCode = 401;
-                response.ReasonPhrase = "Unauthorized";
+                response.Reason = "Unauthorized";
                 return;
             }
 
@@ -94,7 +94,7 @@ namespace Zelenay_MTCG.Server.Endpoints.DeckEndpoint
             if (user == null)
             {
                 response.StatusCode = 401;
-                response.ReasonPhrase = "Unauthorized";
+                response.Reason = "Unauthorized";
                 return;
             }
 
@@ -103,7 +103,7 @@ namespace Zelenay_MTCG.Server.Endpoints.DeckEndpoint
             if (cardIds == null || cardIds.Count != 4)
             {
                 response.StatusCode = 400;
-                response.ReasonPhrase = "Bad Request";
+                response.Reason = "Bad Request";
                 response.Body = "You must provide exactly 4 card IDs.";
                 return;
             }
@@ -113,13 +113,13 @@ namespace Zelenay_MTCG.Server.Endpoints.DeckEndpoint
             if (!success)
             {
                 response.StatusCode = 400;
-                response.ReasonPhrase = "Bad Request";
+                response.Reason = "Bad Request";
                 response.Body = "Unable to configure deck.";
             }
             else
             {
                 response.StatusCode = 200;
-                response.ReasonPhrase = "OK";
+                response.Reason = "OK";
                 response.Body = "Deck configured successfully.";
             }
         }

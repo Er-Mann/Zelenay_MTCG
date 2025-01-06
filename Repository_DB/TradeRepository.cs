@@ -38,16 +38,10 @@ namespace Zelenay_MTCG.Repository_DB
                     return false;
                 }
 
-                // 2) Find a package that is “unsold.” 
-                //    We can consider “unsold” if all its cards have no user assigned,
-                //    or if we have a packages table with a 'sold' flag, etc.
-                //    For simplicity, let's find the first package whose cards are not assigned:
                 int packageId = -1;
                 using (var cmd = connection.CreateCommand())
                 {
-                    cmd.Transaction = transaction;
-                    // One approach: find any package that has all 5 cards with userId = NULL
-                    // This is a simplified example (adjust to your schema)
+                    cmd.Transaction = transaction;                 
                     cmd.CommandText = @"
                     SELECT p.packageid
                     FROM packages p
@@ -61,13 +55,12 @@ namespace Zelenay_MTCG.Repository_DB
                     object? result = cmd.ExecuteScalar();
                     if (result == null)
                     {
-                        // No available package => fail
+                        
                         return false;
                     }
                     packageId = Convert.ToInt32(result);
                 }
-
-                // 3) Subtract cost from user
+                
                 int updatedGold = user.Gold - PACKAGE_COST;
                 using (var cmd = connection.CreateCommand())
                 {
@@ -84,7 +77,6 @@ namespace Zelenay_MTCG.Repository_DB
                 }
                 user.Gold = updatedGold;
 
-                // 4) Assign all cards in that package to user
                 using (var cmd = connection.CreateCommand())
                 {
                     cmd.Transaction = transaction;
@@ -98,12 +90,7 @@ namespace Zelenay_MTCG.Repository_DB
                     cmd.ExecuteNonQuery();
                 }
 
-                transaction.Commit();
-
-                // Optionally update user object in memory
-                // or reload user from DB:
-                // user = _userRepo.GetUserById(user.UserId);
-
+                transaction.Commit();              
                 return true;
             }
             catch

@@ -48,7 +48,7 @@ namespace Zelenay_MTCG.Models.Cards
             CardType = cardType;
         }
 
-        public void InferTypesFromName()
+        public void TypesFromName()
         {
             // If "Spell" in Name => CardType.Spell; otherwise Monster
             if (Name?.Contains("Spell", StringComparison.OrdinalIgnoreCase) == true)

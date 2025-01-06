@@ -27,7 +27,7 @@ namespace Zelenay_MTCG.Server.Endpoints.BattleEndpoint
             else
             {
                 response.StatusCode = 404;
-                response.ReasonPhrase = "Not Found";
+                response.Reason = "Not Found";
             }
         }
 
@@ -40,7 +40,7 @@ namespace Zelenay_MTCG.Server.Endpoints.BattleEndpoint
             if (user == null)
             {
                 response.StatusCode = 401;
-                response.ReasonPhrase = "Unauthorized";
+                response.Reason = "Unauthorized";
                 response.Body = "User not found.";
                 return;
             }
@@ -50,7 +50,7 @@ namespace Zelenay_MTCG.Server.Endpoints.BattleEndpoint
             {
                 battleManager.EnqueuePlayer(user);
                 response.StatusCode = 202; // Accepted
-                response.ReasonPhrase = "Waiting for an opponent.";
+                response.Reason = "Waiting for an opponent.";
                 response.Body = "You have been added to the waiting list.";
 
                 // Wait for the battle log to be available
@@ -62,7 +62,7 @@ namespace Zelenay_MTCG.Server.Endpoints.BattleEndpoint
                 // Retrieve the log after the battle is complete
                 string? battleLog = battleManager.GetBattleLogForPlayer(user.Username);
                 response.StatusCode = 200;
-                response.ReasonPhrase = "OK";
+                response.Reason = "OK";
                 response.Body = $"Battle completed! Log:\n{battleLog}";
             }
             else
@@ -72,7 +72,7 @@ namespace Zelenay_MTCG.Server.Endpoints.BattleEndpoint
                 battleManager.AddBattleLog(opponent.Username, battleLog);
 
                 response.StatusCode = 200;
-                response.ReasonPhrase = "OK";
+                response.Reason = "OK";
                 response.Body = $"Battle completed! Log:\n{battleLog}";
             }
         }
@@ -116,7 +116,23 @@ namespace Zelenay_MTCG.Server.Endpoints.BattleEndpoint
                 }
             }
 
-            string winner = deck1.Count > 0 ? player1.Username : player2.Username;
+            string winner;
+            if (deck1.Count > 0)
+            {
+                winner = player1.Username;
+                UpdatePlayerStats(player1, player2, isDraw: false, isPlayer1Winner: true);
+            }
+            else if (deck2.Count > 0)
+            {
+                winner = player2.Username;
+                UpdatePlayerStats(player1, player2, isDraw: false, isPlayer1Winner: false);
+            }
+            else
+            {
+                winner = "No one (draw)";
+                UpdatePlayerStats(player1, player2, isDraw: true);
+            }
+
             log.AppendLine($"{winner} wins the battle!");
 
             // Update database with new decks
@@ -124,6 +140,35 @@ namespace Zelenay_MTCG.Server.Endpoints.BattleEndpoint
             _deckRepository.ConfigureDeck(player2.UserId, deck2.Select(c => c.Id).ToList());
 
             return log.ToString();
+        }
+
+        private void UpdatePlayerStats(User player1, User player2, bool isDraw, bool isPlayer1Winner = false)
+        {
+            if (isDraw)
+            {
+                return; // No changes for a draw
+            }
+
+            if (isPlayer1Winner)
+            {
+                player1.Elo += 3; // Winner gains Elo
+                player1.Wins += 1;
+
+                player2.Elo -= 5; // Loser loses Elo
+                player2.Losses += 1;
+            }
+            else
+            {
+                player2.Elo += 3; // Winner gains Elo
+                player2.Wins += 1;
+
+                player1.Elo -= 5; // Loser loses Elo
+                player1.Losses += 1;
+            }
+
+            // Update players in the database
+            _userRepository.UpdatePlayerStats(player1);
+            _userRepository.UpdatePlayerStats(player2);
         }
 
         private float CalculateDamage(Card attacker, Card defender)

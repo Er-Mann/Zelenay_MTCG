@@ -19,6 +19,7 @@ namespace Zelenay_MTCG.Models.Usermodel
         public int Losses { get; set; }
         public string AuthToken { get; set; }
         public int UserId { get; set; }
+
         public string Name { get; set; }
         public string Bio { get; set; }
         public string Image { get; set; }
@@ -26,17 +27,17 @@ namespace Zelenay_MTCG.Models.Usermodel
         {
 
         }
-        public User(string username, string password)
-        {
-            Username = username;
-            Password = password;
-            Gold = 20;
-            CardStack = new List<Card>();
-            BattleDeck = new List<Card>();
-            Elo = 100;
-            Losses = 0;
-            Wins = 0;
+        //public User(string username, string password)
+        //{
+        //    Username = username;
+        //    Password = password;
+        //    Gold = 20;
+        //    CardStack = new List<Card>();
+        //    BattleDeck = new List<Card>();
+        //    Elo = 100;
+        //    Losses = 0;
+        //    Wins = 0;
             
-        }
+        //}
     }
 }

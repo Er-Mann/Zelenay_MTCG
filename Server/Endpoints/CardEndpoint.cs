@@ -26,7 +26,7 @@ namespace Zelenay_MTCG.Server.Endpoints.CardEndpoint
                 if (!request.Headers.TryGetValue("Authorization", out string authHeader))
                 {
                     response.StatusCode = 401;
-                    response.ReasonPhrase = "Unauthorized";
+                    response.Reason = "Unauthorized";
                     response.Body = "Missing token.";
                     return;
                 }
@@ -35,7 +35,7 @@ namespace Zelenay_MTCG.Server.Endpoints.CardEndpoint
                 if (string.IsNullOrEmpty(username))
                 {
                     response.StatusCode = 401;
-                    response.ReasonPhrase = "Unauthorized";
+                    response.Reason = "Unauthorized";
                     response.Body = "Invalid token.";
                     return;
                 }
@@ -45,7 +45,7 @@ namespace Zelenay_MTCG.Server.Endpoints.CardEndpoint
                 if (user == null)
                 {
                     response.StatusCode = 401;
-                    response.ReasonPhrase = "Unauthorized";
+                    response.Reason = "Unauthorized";
                     response.Body = "User not found.";
                     return;
                 }
@@ -55,13 +55,13 @@ namespace Zelenay_MTCG.Server.Endpoints.CardEndpoint
 
                 // 4) Return them as JSON
                 response.StatusCode = 200;
-                response.ReasonPhrase = "OK";
+                response.Reason = "OK";
                 response.Body = JsonSerializer.Serialize(cards);
             }
             else
             {
                 response.StatusCode = 404;
-                response.ReasonPhrase = "Not Found";
+                response.Reason = "Not Found";
                 response.Body = "Endpoint not found.";
             }
         }

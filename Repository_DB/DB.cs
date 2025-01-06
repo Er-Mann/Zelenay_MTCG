@@ -38,7 +38,7 @@ namespace Zelenay_MTCG.Repository_DB
         DROP TABLE IF EXISTS packages  CASCADE;
         DROP TABLE IF EXISTS users     CASCADE;
 
-        -- 2) USERS table
+
         CREATE TABLE IF NOT EXISTS mydb.public.users (
             userid         SERIAL PRIMARY KEY,
             username       TEXT    NOT NULL UNIQUE,
@@ -53,7 +53,7 @@ namespace Zelenay_MTCG.Repository_DB
             image          TEXT
         );
 
-        -- 3) PACKAGES table
+
         CREATE TABLE IF NOT EXISTS mydb.public.packages (
             packageid   SERIAL PRIMARY KEY
         );
@@ -71,8 +71,6 @@ namespace Zelenay_MTCG.Repository_DB
             FOREIGN KEY (userid)    REFERENCES mydb.public.users (userid)
 );
 
-
-        -- 5) DECKS table
         CREATE TABLE IF NOT EXISTS mydb.public.decks (
             deckid     SERIAL PRIMARY KEY,
             userid     INT NOT NULL,
@@ -88,28 +86,7 @@ namespace Zelenay_MTCG.Repository_DB
         );
 ALTER TABLE decks ADD CONSTRAINT unique_userid UNIQUE (userid);
 
-
-        -- 6) TRADES table
-        CREATE TABLE IF NOT EXISTS mydb.public.trades (
-            tradeid        SERIAL PRIMARY KEY,
-            userid         INT     NOT NULL,
-            cardid         TEXT     NOT NULL,
-            card_type      INT     NOT NULL,
-            minimum_damage DECIMAL NOT NULL,
-            FOREIGN KEY (userid) REFERENCES mydb.public.users (userid),
-            FOREIGN KEY (cardid) REFERENCES mydb.public.cards (cardid)
-        );
-
-        -- 7) BATTLES table
-        CREATE TABLE IF NOT EXISTS mydb.public.battles (
-            battleid     SERIAL PRIMARY KEY,
-            player_1_id  INT NOT NULL,
-            player_2_id  INT NOT NULL,
-            winner_id    INT,
-            FOREIGN KEY (player_1_id) REFERENCES mydb.public.users (userid),
-            FOREIGN KEY (player_2_id) REFERENCES mydb.public.users (userid),
-            FOREIGN KEY (winner_id)   REFERENCES mydb.public.users (userid)
-        );
+      
     ";
 
             command.ExecuteNonQuery();

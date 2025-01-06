@@ -1,5 +1,4 @@
-using System;
-using System.IO;
+
 using System.Net.Sockets;
 using Zelenay_MTCG.Server.Endpoints.Userendpoint;
 using Zelenay_MTCG.Server.Endpoints.TradeEndpoint;
@@ -11,6 +10,9 @@ using Zelenay_MTCG.Server.HttpModel;
 using Zelenay_MTCG.Server.HttpLogic;
 using Zelenay_MTCG.Repository_DB;
 using Zelenay_MTCG.Server.Endpoints.BattleEndpoint;
+using Zelenay_MTCG.Server.Endpoints.StatsEndpoint;
+
+using Zelenay_MTCG.Server.Endpoints.ScoreboardEndpoint;
 
 namespace Zelenay_MTCG.Server.HttpHandler
 {
@@ -24,7 +26,8 @@ namespace Zelenay_MTCG.Server.HttpHandler
         private readonly TradeRepository _TradeRepository;
         private readonly CardRepository _cardRepository;
         private readonly DeckRepository _deckRepository;
-
+        private readonly StatsRepository _statsRepository; 
+        private readonly ScoreboardRepository _scoreboardRepository;
 
         public HttpProcessor()
         {
@@ -36,6 +39,8 @@ namespace Zelenay_MTCG.Server.HttpHandler
             _TradeRepository = new TradeRepository(_userRepository);
             _cardRepository = new CardRepository();
             _deckRepository = new DeckRepository();
+            _statsRepository = new StatsRepository();
+            _scoreboardRepository = new ScoreboardRepository();
         }
 
         public void ProcessRequest(TcpClient clientSocket)
@@ -87,11 +92,20 @@ namespace Zelenay_MTCG.Server.HttpHandler
                 var battleEndpoint = new BattleEndpoint(_userRepository, _deckRepository);
                 battleEndpoint.HandleRequest(request, response);
             }
-
+            else if (request.Path == "/stats" && request.Method == "GET")
+            {
+                var statsEndpoint = new StatsEndpoint(_statsRepository);
+                statsEndpoint.HandleRequest(request, response);
+            }
+            else if (request.Path == "/scoreboard" && request.Method == "GET")
+            {
+                var scoreboardEndpoint = new ScoreboardEndpoint(_scoreboardRepository);
+                scoreboardEndpoint.HandleRequest(request, response);
+            }
             else
             {
                 response.StatusCode = 404;
-                response.ReasonPhrase = "Not Found";
+                response.Reason = "Not Found";
                 response.Body = "The requested resource was not found.";
             }
 

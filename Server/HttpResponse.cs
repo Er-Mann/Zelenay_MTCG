@@ -11,7 +11,7 @@ namespace Zelenay_MTCG.Server.HttpLogic
         {
             var writerAlsoToConsole = new StreamTracer(writer);  // Helper class to write to both client and console
             
-            writerAlsoToConsole.WriteLine($"{response.HttpVersion} {response.StatusCode} {response.ReasonPhrase}");
+            writerAlsoToConsole.WriteLine($"{response.HttpVersion} {response.StatusCode} {response.Reason}");
 
             // Ensure Content-Length header is set
             if (!response.Headers.ContainsKey("Content-Length"))

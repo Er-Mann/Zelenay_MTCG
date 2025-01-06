@@ -35,36 +35,7 @@ namespace Zelenay_MTCG.Repository_DB
             user.UserId = Convert.ToInt32(command.ExecuteScalar());
         }
 
-        public User? GetUserById(int userId)
-        {
-            using IDbConnection connection = DBcs.CreateConnection();
-            connection.Open();
 
-            using IDbCommand command = connection.CreateCommand();
-            command.CommandText = @"
-                SELECT userid, username, password, elo, gold, wins, losses, authtoken 
-                FROM mydb.public.users 
-                WHERE userid = @userid";
-
-            AddParameterWithValue(command, "@userid", DbType.Int32, userId);
-
-            using IDataReader reader = command.ExecuteReader();
-            if (reader.Read())
-            {
-                return new User
-                {
-                    UserId = reader.GetInt32(0),
-                    Username = reader.GetString(1),
-                    Password = reader.GetString(2),
-                    Elo = reader.GetInt32(3),
-                    Gold = reader.GetInt32(4),
-                    Wins = reader.GetInt32(5),
-                    Losses = reader.GetInt32(6),
-                    AuthToken = reader.IsDBNull(7) ? "" : reader.GetString(7)
-                };
-            }
-            return null;
-        }
 
         public User? GetUserByUsername(string username)
         {
@@ -98,36 +69,6 @@ namespace Zelenay_MTCG.Repository_DB
 
             return null;
         }
-
-
-        public User? GetUserByAuthToken(string authToken)
-        {
-            using IDbConnection connection = DBcs.CreateConnection();
-            connection.Open();
-
-            using IDbCommand command = connection.CreateCommand();
-
-            command.CommandText = """SELECT "userid", username, password, elo, gold, wins, losses, "authtoken" FROM mydb.public.users WHERE "authtoken" = @authtoken""";
-            AddParameterWithValue(command, "@authtoken", DbType.String, authToken);
-
-            using var reader = command.ExecuteReader(); if (reader.Read())
-            {
-                return new User
-                {
-                    UserId = reader.GetInt32(0),
-                    Username = reader.GetString(1),
-                    Password = reader.GetString(2),
-                    Elo = reader.GetInt32(3),
-                    Gold = reader.GetInt32(4),
-                    Wins = reader.GetInt32(5),
-                    Losses = reader.GetInt32(6),
-                    AuthToken = reader.IsDBNull(7) ? "" : reader.GetString(7)
-                };
-            }
-            return null;
-        }
-
-
 
 
         public User? GetUserProfile(string username)
@@ -195,21 +136,26 @@ namespace Zelenay_MTCG.Repository_DB
             }
         }
 
+        public void UpdatePlayerStats(User user)
+        {
+            using IDbConnection connection = DBcs.CreateConnection();
+            connection.Open();
 
-        //private user mapreadertouser(idatareader reader)
-        //{
-        //    return new user
-        //    {
-        //        userid = reader.getint32(0),
-        //        username = reader.getstring(1),
-        //        password = reader.getstring(2),
-        //        elo = reader.getint32(3),
-        //        gold = reader.getint32(4),
-        //        wins = reader.getint32(5),
-        //        losses = reader.getint32(6),
-        //        authtoken = reader.isdbnull(7) ? string.empty : reader.getstring(7)
-        //    };
-        //}
+            using IDbCommand command = connection.CreateCommand();
+            command.CommandText = @"
+        UPDATE mydb.public.users
+        SET elo = @elo, wins = @wins, losses = @losses
+        WHERE userid = @userid
+    ";
+
+            AddParameterWithValue(command, "@elo", DbType.Int32, user.Elo);
+            AddParameterWithValue(command, "@wins", DbType.Int32, user.Wins);
+            AddParameterWithValue(command, "@losses", DbType.Int32, user.Losses);
+            AddParameterWithValue(command, "@userid", DbType.Int32, user.UserId);
+
+            command.ExecuteNonQuery();
+        }
+
 
         public static void AddParameterWithValue(IDbCommand command, string parameterName, DbType type, object value)
         {

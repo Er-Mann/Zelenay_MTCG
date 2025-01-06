@@ -26,15 +26,13 @@ public class PackageEndpoint : IEndpoint
         // We expect: POST /packages, admin auth token
         if (request.Method == "POST" && request.Path == "/packages")
         {
-            // Check if the user is admin
-            // e.g., parse token from request.Headers["Authorization"]
-            // Here we just assume it's valid for demonstration
+           
             bool isAdmin = IsAdmin(request.Headers);
 
             if (!isAdmin)
             {
                 response.StatusCode = 403;
-                response.ReasonPhrase = "Forbidden";
+                response.Reason = "Forbidden";
                 response.Body = "Only admin can create packages.";
                 return;
             }
@@ -44,28 +42,27 @@ public class PackageEndpoint : IEndpoint
             if (cards == null || cards.Count == 0)
             {
                 response.StatusCode = 400;
-                response.ReasonPhrase = "Bad Request";
+                response.Reason = "Bad Request";
                 response.Body = "No cards provided.";
                 return; 
             }
             if (_packageRepository.CheckUniqueCardIds(cards)) {
                 response.StatusCode = 407;
-                response.ReasonPhrase = "Bad Request";
+                response.Reason = "Bad Request";
                 response.Body = "Cardid already exists.";
                 return;
             }
-            // Let the repo create the package
             _packageRepository.CreatePackage(cards);
 
             response.StatusCode = 201;
-            response.ReasonPhrase = "Created";
+            response.Reason = "Created";
             response.Body = "Package created successfully.";
         }
         else
         {
-            // If the endpoint or method doesn't match, return 404
+            
             response.StatusCode = 404;
-            response.ReasonPhrase = "Not Found";
+            response.Reason = "Not Found";
             response.Body = "Endpoint not found.";
         }
     }
