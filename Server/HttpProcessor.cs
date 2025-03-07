@@ -102,6 +102,11 @@ namespace Zelenay_MTCG.Server.HttpHandler
                 var scoreboardEndpoint = new ScoreboardEndpoint(_scoreboardRepository);
                 scoreboardEndpoint.HandleRequest(request, response);
             }
+            else if (request.Path == "/tradings" || request.Path.StartsWith("/tradings/"))
+            {
+                var tradeEndpoint = new TradeEndpoint(_TradeRepository, _userRepository);
+                tradeEndpoint.HandleRequest(request, response);
+            }
             else
             {
                 response.StatusCode = 404;

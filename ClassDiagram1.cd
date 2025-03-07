@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Zelenay_MTCG.Program" Collapsed="true">
+    <Position X="4" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Server.Battle.BattleManager" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEEQAAACAQAAAAAAAAAAAAAAAAAAAAAQAgEAAAAAAA=</HashCode>
+      <FileName>Logic\BattleManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Models.Cards.Card" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACBACAAAAAAAAAAAAAAAQAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Card.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Server.HttpModel.Request" Collapsed="true">
+    <Position X="5.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAAhAAAACAAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>Models\HttpRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Server.HttpModel.Response" Collapsed="true">
+    <Position X="7.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAABAAAACAAAAAAAIAAAAAQAAAA=</HashCode>
+      <FileName>Models\HttpResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Models.Package.Package" Collapsed="true">
+    <Position X="9.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAQAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Package.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Models.TradeModel.Trade" Collapsed="true">
+    <Position X="9.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAABAAAAACAAAQAAAAAAKAA=</HashCode>
+      <FileName>Models\Trade.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Models.Usermodel.User" Collapsed="true">
+    <Position X="4" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAgAAAACQAAAAwAAAAAABAiAAAIAAAAAAE=</HashCode>
+      <FileName>Models\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Repository_DB.CardRepository" Collapsed="true">
+    <Position X="7.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>SAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>Repository_DB\CardRepository.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Repository_DB.DBconn" Collapsed="true">
+    <Position X="9.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEABAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Repository_DB\DB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Repository_DB.DeckRepository" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAABAAAAAAAAAAAAAAACAACAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Repository_DB\DeckRepository.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Repository_DB.PackageRepository" Collapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAAAAAAAAAQAACAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Repository_DB\PackageRepository.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Repository_DB.ScoreboardRepository" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAIAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Repository_DB\ScoreboardRepository.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Repository_DB.StatsRepository" Collapsed="true">
+    <Position X="4" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAABAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Repository_DB\StatsRepository.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Repository_DB.UserStats" Collapsed="true">
+    <Position X="9.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAQAAAAAAAAAAAAAgAAAIAAAAAAA=</HashCode>
+      <FileName>Repository_DB\StatsRepository.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Repository_DB.TradeRepository" Collapsed="true">
+    <Position X="2.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>KAAAIAAAAAACAAAAQAAAAAACAAAAAAAAAAAAACAAEAA=</HashCode>
+      <FileName>Repository_DB\TradeRepository.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Repository_DB.UserRepository" Collapsed="true">
+    <Position X="7.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAQAAgABAAAABQAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Repository_DB\UserRepository.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Server.Endpoints.BattleEndpoint.BattleEndpoint" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAEhAAAAAABAAAAICAAAAAAAAAAAAAAgAAAAAQA=</HashCode>
+      <FileName>Server\Endpoints\BattleEndpoint.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Zelenay_MTCG.Server.Endpoints.CardEndpoint.CardEndpoint" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAABAAAAAAAAAAAAAAAAABAAgAAAAAAA=</HashCode>
+      <FileName>Server\Endpoints\CardEndpoint.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Zelenay_MTCG.Server.Endpoints.DeckEndpoint.DeckEndpoint" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAABAAACACAAAAAAAAAAAAAAoAAAAAAA=</HashCode>
+      <FileName>Server\Endpoints\DeckEndpoint.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Zelenay_MTCG.Server.Endpoints.Packageendpoint.PackageEndpoint" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAACAAAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>Server\Endpoints\PackageEndpoint.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Zelenay_MTCG.Server.Endpoints.ScoreboardEndpoint.ScoreboardEndpoint" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="9.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Server\Endpoints\ScoreboardEndpoint.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Zelenay_MTCG.Server.Endpoints.StatsEndpoint.StatsEndpoint" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAAQAAAAgAAAAAAA=</HashCode>
+      <FileName>Server\Endpoints\StatsEndpoint.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Orientation="Left" Position="0.1" Collapsed="true" />
+  </Class>
+  <Class Name="Zelenay_MTCG.Server.Endpoints.TradeEndpoint.TradeEndpoint" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAABAQBAAAAAAAAAAAAAEAAAAAAgAAABUAA=</HashCode>
+      <FileName>Server\Endpoints\TradeEndpoint.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Zelenay_MTCG.Server.Endpoints.Userendpoint.UserEndpoint" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAgAAAAAABAAAAgIAAAAAAAABAAAAAgAAIAAAE=</HashCode>
+      <FileName>Server\Endpoints\UserEndpoint.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Zelenay_MTCG.Server.TcpServer" Collapsed="true">
+    <Position X="7.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Server\DerServer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Server.HttpHandler.HttpProcessor" Collapsed="true">
+    <Position X="4" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgQAQAAAAAABAACAAAAACAAAQABACBAAAAAAA=</HashCode>
+      <FileName>Server\HttpProcessor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Server.HttpHandler.StreamTracer" Collapsed="true">
+    <Position X="5.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Server\StreamTracer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Server.HttpLogic.HttpRequest" Collapsed="true">
+    <Position X="5.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Server\HttpRequest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zelenay_MTCG.Server.HttpLogic.HttpResponse" Collapsed="true">
+    <Position X="7.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Server\HttpResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Zelenay_MTCG.Server.Endpoints.IEndpoint" Collapsed="true">
+    <Position X="0.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Server\Endpoints\IEndpoint.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Zelenay_MTCG.Models.Cards.enumElementType" Collapsed="true">
+    <Position X="2.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Card.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Zelenay_MTCG.Models.Cards.enumCardType" Collapsed="true">
+    <Position X="0.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAgAAAgAAAAA=</HashCode>
+      <FileName>Models\Card.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

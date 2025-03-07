@@ -54,7 +54,7 @@ namespace Zelenay_MTCG.Repository_DB
         );
 
 
-        CREATE TABLE IF NOT EXISTS mydb.public.packages (
+        CREATE TABLE IF NOT EXISTS mydb.public.packages ( 
             packageid   SERIAL PRIMARY KEY
         );
 
@@ -84,13 +84,22 @@ namespace Zelenay_MTCG.Repository_DB
             FOREIGN KEY (card_3_id) REFERENCES mydb.public.cards (cardid),
             FOREIGN KEY (card_4_id) REFERENCES mydb.public.cards (cardid)
         );
+        CREATE TABLE IF NOT EXISTS mydb.public.trades (
+                    tradeid       SERIAL PRIMARY KEY,
+                    seller        TEXT NOT NULL,
+                    cardid        TEXT NOT NULL,
+                    type          TEXT NOT NULL,
+                    minimumdamage INT NOT NULL,
+                    FOREIGN KEY (seller) REFERENCES mydb.public.users (username),
+                    FOREIGN KEY (cardid) REFERENCES mydb.public.cards (cardid)
+                );
 ALTER TABLE decks ADD CONSTRAINT unique_userid UNIQUE (userid);
 
       
     ";
 
             command.ExecuteNonQuery();
-            //connection.Close();
+      
         }
 
 

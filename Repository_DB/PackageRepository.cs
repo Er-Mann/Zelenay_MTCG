@@ -36,7 +36,7 @@ namespace Zelenay_MTCG.Repository_DB
 
             try
             {
-                // 1) Insert a row in packages
+            
                 int newPackageId;
                 using (var cmd = connection.CreateCommand())
                 {
@@ -50,10 +50,8 @@ namespace Zelenay_MTCG.Repository_DB
                     newPackageId = Convert.ToInt32(cmd.ExecuteScalar());
                 }
 
-                // 2) Insert each card referencing newPackageId
                 foreach (var card in cards)
                 {
-                    // We can reuse the same connection if we want, just need the same transaction:
                     using var cmd2 = connection.CreateCommand();
                     cmd2.Transaction = transaction;
 
@@ -72,7 +70,7 @@ namespace Zelenay_MTCG.Repository_DB
                     AddParameter(cmd2, "@card_type", DbType.Int32, (int)card.CardType);
                     AddParameter(cmd2, "@package_id", DbType.Int32, newPackageId);
 
-                    // The database will return the same ID you just inserted:
+                    
                     card.Id = cmd2.ExecuteScalar().ToString();
                 }
 
