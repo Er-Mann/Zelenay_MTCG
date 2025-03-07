@@ -136,7 +136,7 @@ namespace Zelenay_MTCG.Server.Endpoints.BattleEndpoint
             log.AppendLine($"{winner} wins the battle!");
 
             // Update database with new decks
-            _deckRepository.ConfigureDeck(player1.UserId, deck1.Select(c => c.Id).ToList());
+            _deckRepository.ConfigureDeck(player1.UserId, deck1.Select(c => c.Id).ToList()); // Convert card objects to list of card IDs
             _deckRepository.ConfigureDeck(player2.UserId, deck2.Select(c => c.Id).ToList());
 
             return log.ToString();
@@ -151,18 +151,18 @@ namespace Zelenay_MTCG.Server.Endpoints.BattleEndpoint
 
             if (isPlayer1Winner)
             {
-                player1.Elo += 3; // Winner gains Elo
+                player1.Elo += 3;
                 player1.Wins += 1;
 
-                player2.Elo -= 5; // Loser loses Elo
+                player2.Elo -= 5;
                 player2.Losses += 1;
             }
             else
             {
-                player2.Elo += 3; // Winner gains Elo
+                player2.Elo += 3;
                 player2.Wins += 1;
 
-                player1.Elo -= 5; // Loser loses Elo
+                player1.Elo -= 5;
                 player1.Losses += 1;
             }
 
@@ -171,17 +171,24 @@ namespace Zelenay_MTCG.Server.Endpoints.BattleEndpoint
             _userRepository.UpdatePlayerStats(player2);
         }
 
-        private float CalculateDamage(Card attacker, Card defender)
+        public float CalculateDamage(Card attacker, Card defender)
         {
-            //if (attacker.CardType == enumCardType.Spell && defender.CardType == enumCardType.Spell) //blödsinn????
-            //{
-            //    if (attacker.ElementType == enumElementType.Fire && defender.ElementType == enumElementType.Water)
-            //        return attacker.Damage / 2;
-            //    if (attacker.ElementType == enumElementType.Water && defender.ElementType == enumElementType.Fire)
-            //        return attacker.Damage * 2;
-            //}
+            float baseDamage = attacker.Damage;
+            float effectiveness = 1.0f;
 
-            return attacker.Damage; // Base damage for all other cases
+            // Check if either card is a spell
+            bool isSpellInvolved = attacker.CardType == enumCardType.Spell || defender.CardType == enumCardType.Spell;
+
+            if (isSpellInvolved)
+            {
+                // Check effectiveness of Element 
+                if (_effectivenessMultipliers.TryGetValue((attacker.ElementType, defender.ElementType), out float multiplier))
+                {
+                    effectiveness = multiplier;
+                }
+            }
+
+            return baseDamage * effectiveness;
         }
 
         private string ExtractUsernameFromToken(string authHeader)
@@ -189,9 +196,19 @@ namespace Zelenay_MTCG.Server.Endpoints.BattleEndpoint
             if (authHeader.Contains("Bearer"))
             {
                 string token = authHeader.Replace("Bearer", "").Trim();
-                return token.Split("-")[0]; // e.g., "kienboec" from "kienboec-mtcgToken"
+                return token.Split("-")[0];
             }
             return string.Empty;
         }
+
+        private readonly Dictionary<(enumElementType, enumElementType), float> _effectivenessMultipliers = new()
+        {
+            {(enumElementType.Water, enumElementType.Fire), 1.5f},   // Water -> Fire
+            {(enumElementType.Fire, enumElementType.Normal), 1.5f},  // Fire -> Normal
+            {(enumElementType.Normal, enumElementType.Water), 1.5f}, // Normal -> Water
+            {(enumElementType.Fire, enumElementType.Water), 0.5f},   // Fire -> Water
+            {(enumElementType.Normal, enumElementType.Fire), 0.5f},  // Normal -> Fire
+            {(enumElementType.Water, enumElementType.Normal), 0.5f}
+        };
     }
 }

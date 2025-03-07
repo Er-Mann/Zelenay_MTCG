@@ -8,12 +8,11 @@ namespace Zelenay_MTCG.Server
     public class TcpServer
     {
         private readonly TcpListener _httpServer;
-        private readonly HttpProcessor _httpProcessor;
 
         public TcpServer(IPAddress ipAddress, int port)
         {
             _httpServer = new TcpListener(ipAddress, port);
-            _httpProcessor = new HttpProcessor();
+            
         }
 
         public void Start()
@@ -26,7 +25,9 @@ namespace Zelenay_MTCG.Server
             {
                 var clientSocket = _httpServer.AcceptTcpClient();
 
-                var clientThread = new Thread(() => _httpProcessor.ProcessRequest(clientSocket)); //lambda expression
+                var httpProcessor = new HttpProcessor(); // Für jeden Client wird ein HttpProcessor erstellt
+
+                var clientThread = new Thread(() => httpProcessor.ProcessRequest(clientSocket)); // Lambda expression
                 clientThread.Start();
          
             }

@@ -22,7 +22,6 @@ namespace Zelenay_MTCG.Repository_DB
 
         public bool AcquirePackage(User user)
         {
-            // Example cost for 1 package
             const int PACKAGE_COST = 5;
 
             using IDbConnection connection = _dbConn.CreateConnection();
@@ -31,66 +30,79 @@ namespace Zelenay_MTCG.Repository_DB
 
             try
             {
-                // 1) Check user’s gold
-                if (user.Gold < PACKAGE_COST)
+                // Check if the user has enough gold
+                if (user.Gold >= PACKAGE_COST)
                 {
-                    // Not enough money => fail
-                    return false;
+                    return false; // Not enough money
                 }
 
                 int packageId = -1;
                 using (var cmd = connection.CreateCommand())
                 {
-                    cmd.Transaction = transaction;                 
+                    cmd.Transaction = transaction;
                     cmd.CommandText = @"
-                    SELECT p.packageid
-                    FROM packages p
-                    JOIN cards c ON p.packageid = c.package_id
-                    WHERE c.userid IS NULL
-                    GROUP BY p.packageid
-                    HAVING COUNT(c.cardid) = 5
-                    LIMIT 1;
-                    ";
+                SELECT p.packageid
+                FROM packages p
+                JOIN cards c ON p.packageid = c.package_id
+                WHERE c.userid IS NULL
+                GROUP BY p.packageid
+                HAVING COUNT(c.cardid) = 5
+                LIMIT 1;
+            ";
 
                     object? result = cmd.ExecuteScalar();
                     if (result == null)
                     {
-                        
-                        return false;
+                        transaction.Rollback();
+                        return false; // No available packages
                     }
                     packageId = Convert.ToInt32(result);
                 }
+
                 
                 int updatedGold = user.Gold - PACKAGE_COST;
                 using (var cmd = connection.CreateCommand())
                 {
                     cmd.Transaction = transaction;
                     cmd.CommandText = @"
-                        UPDATE users
-                        SET gold = @gold
-                        WHERE userid = @userid
-                    ";
+                UPDATE users
+                SET gold = @gold
+                WHERE userid = @userid
+            ";
 
                     AddParameter(cmd, "@gold", DbType.Int32, updatedGold);
                     AddParameter(cmd, "@userid", DbType.Int32, user.UserId);
-                    cmd.ExecuteNonQuery();
-                }
-                user.Gold = updatedGold;
 
+                    if (cmd.ExecuteNonQuery() == 0) 
+                    {
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
+
+                // Assign package to user
                 using (var cmd = connection.CreateCommand())
                 {
                     cmd.Transaction = transaction;
                     cmd.CommandText = @"
-                        UPDATE cards
-                        SET userid = @userid
-                        WHERE package_id = @package_id
-                    ";
+                UPDATE cards
+                SET userid = @userid
+                WHERE package_id = @package_id
+            ";
                     AddParameter(cmd, "@userid", DbType.Int32, user.UserId);
                     AddParameter(cmd, "@package_id", DbType.Int32, packageId);
-                    cmd.ExecuteNonQuery();
+
+                    if (cmd.ExecuteNonQuery() == 0) 
+                    {
+                        transaction.Rollback();
+                        return false;
+                    }
                 }
 
-                transaction.Commit();              
+                // Only Update after succesful aquire
+                user.Gold = updatedGold;
+
+                transaction.Commit();
                 return true;
             }
             catch

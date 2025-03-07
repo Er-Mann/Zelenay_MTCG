@@ -54,7 +54,7 @@ namespace Zelenay_MTCG.Server.Endpoints.TradeEndpoint
                 bool success = _transactionRepo.AcquirePackage(user);
                 if (!success)
                 {
-                    response.StatusCode = 400;  // 
+                    response.StatusCode = 400;  
                     response.Reason = "Bad Request";
                     response.Body = "Not enough money or no packages available.";
                 }

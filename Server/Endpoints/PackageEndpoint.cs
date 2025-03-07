@@ -23,7 +23,7 @@ public class PackageEndpoint : IEndpoint
 
     public void HandleRequest(Request request, Response response)
     {
-        // We expect: POST /packages, admin auth token
+        // expect: POST /packages, admin auth token
         if (request.Method == "POST" && request.Path == "/packages")
         {
            

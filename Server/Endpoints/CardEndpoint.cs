@@ -67,13 +67,10 @@ namespace Zelenay_MTCG.Server.Endpoints.CardEndpoint
         }
 
         private string ExtractUsernameFromToken(string authHeader)
-        {
-            // e.g. "Authorization: Bearer kienboec-mtcgToken"
+        {       
             if (authHeader.Contains("Bearer"))
-            {
-                // naive approach:
-                string tokenPart = authHeader.Replace("Bearer", "").Trim();
-                // tokenPart = "kienboec-mtcgToken"
+            {            
+                string tokenPart = authHeader.Replace("Bearer", "").Trim();          
                 int index = tokenPart.IndexOf("-mtcgToken", System.StringComparison.OrdinalIgnoreCase);
                 if (index > 0)
                 {

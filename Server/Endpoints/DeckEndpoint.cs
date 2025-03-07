@@ -129,7 +129,7 @@ namespace Zelenay_MTCG.Server.Endpoints.DeckEndpoint
             if (authHeader.Contains("Bearer"))
             {
                 string token = authHeader.Replace("Bearer", "").Trim();
-                return token.Split("-")[0]; // e.g., "kienboec" from "kienboec-mtcgToken"
+                return token.Split("-")[0]; //"kienboec" from "kienboec-mtcgToken"
             }
             return string.Empty;
         }
